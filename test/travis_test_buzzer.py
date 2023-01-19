@@ -6,7 +6,7 @@ import time
 class BuzzerTest(unittest.TestCase):
     def test_node_exist(self):
         nodes = rosnode.get_node_names()
-        self.assertIn('/buzzer',nodes, "node dose not exist")
+        self.assertIn('/buzzer' ,nodes, "node dose not exist")
 
 if __name__ == '__main__':
     time.sleep(3)
