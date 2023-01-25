@@ -1,4 +1,4 @@
-me: ROS test workflow1
+name: ROS test workflow1
 
 on: [push]
 
