@@ -24,6 +24,6 @@ jobs:
     - name: Run tests
       run: |
         source ${CATKIN_WS}/devel/setup.bash
-        bash -xve .test/githuaction_package_make.bash
+        bash -xve ./test/githubaction_package_make.bash
         source ${CATKIN_WS}/devel/setup.bash
         rostest pimouse_ros test.lanch
