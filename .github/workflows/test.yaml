@@ -24,4 +24,5 @@ jobs:
     - name: Run tests
       run: |
         source ${CATKIN_WS}/devel/setup.bash
+        cd ${CATKIN_WS}/src/pimouse_ros
         rostest pimouse_ros test.lanch
