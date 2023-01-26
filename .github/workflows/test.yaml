@@ -19,6 +19,7 @@ jobs:
       run: |
         source /opt/ros/melodic/setup.bash
         mkdir -p ${CATKIN_WS}/src && cd ${CATKIN_WS} && catkin_make
+        bash -xve ./test/travise_prepare_dummy_files.bash
         ln -s ${GITHUB_WORKSPACE} ${CATKIN_WS}/src/
 
     - name: Run tests
