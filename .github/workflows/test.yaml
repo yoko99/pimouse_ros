@@ -24,4 +24,7 @@ jobs:
     - name: Run tests
       run: |
         source ${CATKIN_WS}/devel/setup.bash
+        cd ${CATKIN_WS}/scripts
+        ln -s buzzer1.py buzzer.py
+        cd ${CARKIN_WS}
         rostest pimouse_ros test.launch
