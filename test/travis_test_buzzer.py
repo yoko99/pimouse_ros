@@ -17,7 +17,7 @@ class BuzzerTest(unittest.TestCase):
 
         with open("/dev/rtbuzzer0","r") as f:
             data = f.readline()
-            self.assertEqual(data,"1234/n","value dose not written to rtbuzzer0")
+            self.assertEqual(data,"1234\n","value dose not written to rtbuzzer0")
 
 
 if __name__ == '__main__':
