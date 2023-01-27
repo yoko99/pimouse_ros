@@ -20,6 +20,8 @@ jobs:
         source /opt/ros/melodic/setup.bash
         mkdir -p ${CATKIN_WS}/src && cd ${CATKIN_WS} && catkin_make
         ln -s ${GITHUB_WORKSPACE} ${CATKIN_WS}/src/
+        catkin_make
+        source ~/.bashrc
 
     - name: Run tests
       run: |
