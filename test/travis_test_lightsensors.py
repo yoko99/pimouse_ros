@@ -17,6 +17,7 @@ class LightsensorTest(unittest.TestCase):
 
     def check_values(self,lf,ls,rs,rf):
         vs = self.values
+        print(vs)
         self.assertEqual(vs.left_forward, lf, "different value: left_forward")
         self.assertEqual(vs.left_side, ls, "different value: left_side")
         self.assertEqual(vs.right_side, rs, "different value: right_side")
