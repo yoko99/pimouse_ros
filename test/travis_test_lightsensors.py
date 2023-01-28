@@ -39,7 +39,7 @@ class LightsensorTest(unittest.TestCase):
         self.check_values(4321,123,0,-1)
 
     def test_change_parameter(self):
-        rospy.set_param('lightsensours_freq', 1)
+        rospy.set_param('lightsensors_freq', 1)
         time.sleep(2)
         c_prev = self.count
         time.sleep(3)
