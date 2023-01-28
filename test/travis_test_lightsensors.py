@@ -15,7 +15,7 @@ class LightsensorTest(unittest.TestCase):
         self.count +=1
         self.values = data
 
-    def check_values(self,lf,ls,rf,rs):
+    def check_values(self,lf,ls,rs,rf):
         vs = self.values
         self.assertEqual(vs.left_forward, lf, "different value: left_forward")
         self.assertEqual(vs.left_side, ls, "different value: left_side")
@@ -32,7 +32,7 @@ class LightsensorTest(unittest.TestCase):
         rospy.set_param('/lightsensors_freq', 10)
         time.sleep(2)
         with open("/dev/rtlightsensor0", "w") as f:
-            f.write("1 1 1 1\n")
+            f.write("1 10 1 1\n")
 
         time.sleep(3)
         self.assertFalse(self.count == 0, "cannnot subscribe the topic")
