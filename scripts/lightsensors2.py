@@ -4,7 +4,7 @@ from pimouse_ros.msg import LightSensorValues
 
 if __name__ == '__main__':
     devfile = '/dev/rtlightsensor0'
-    rospy.init_node('loghtsensors')
+    rospy.init_node('lightsensors')
     pub = rospy.Publisher('lightsensors', LightSensorValues, queue_size=1)
 
     rate = rospy.Rate(10)
