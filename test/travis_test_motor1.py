@@ -11,7 +11,7 @@ class MotorTest(unittest.TestCase):
         with open("/dev/" + dev, "r") as f:
             self.assertEqual(f.readline(),str(value)+"\n", message)
     def test_node_exist(self):
-        node = rosnode.get_node_names()
+        nodes = rosnode.get_node_names()
         self.assertIn('/motors', nodes, "node does not exit")
 
     def test_put_freq(self):
@@ -19,7 +19,7 @@ class MotorTest(unittest.TestCase):
         m = MotorFreqs()
         m.left_hz = 123
         m.right_hz = 456
-        for i in rage(10):
+        for i in range(10):
             pub.publish(m)
             time.sleep(0.1)
 
