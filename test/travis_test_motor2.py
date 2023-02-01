@@ -5,6 +5,7 @@ import rosnode, rospy
 import time
 from pimouse_ros.msg import MotorFreqs
 from geometry_msgs.msg import Twist
+form std_srvs.srv import Trigger, TriggerResponse
 
 class MotorTest(unittest.TestCase):
     def setup(self):
