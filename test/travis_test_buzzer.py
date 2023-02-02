@@ -39,7 +39,7 @@ class BuzzerTest(unittest.TestCase):
         ###preempstion###
         self.device_values = []
         self.client.send_goal(goal,feedback_cb=self.feedback_cb)
-        self.client.wait_for_result(rospi.Duration.from_sec(0.5))
+        self.client.wait_for_result(rospy.Duration.from_sec(0.5))
 
         self.assertFalse(self.client.get_result(), "stop is requested but return true")
         self.assertFalse(goal.freqs == self.device_values, "not stopped")
