@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #encoding: utf8
-import rospy, unittest, rostest
+import rospy, unittest, rostest, actionlib
 import rosnode
 import time
 from std_msgs.msg import UInt16
@@ -42,7 +42,7 @@ class BuzzerTest(unittest.TestCase):
         self.client.wait_for_result(rospi.Duration.from_sec(0.5))
 
         self.assertFalse(self.client.get_result(), "stop is requested but return true")
-        self.assertFalse(goal.freqs == self.device_values. "not stopped")
+        self.assertFalse(goal.freqs == self.device_values, "not stopped")
 
     def feedback_cb(self, feedback):
         with open("/dev/rtbusser0", "r") as f:
