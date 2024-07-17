@@ -8,14 +8,18 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04  # これが通常はubuntu-20.04を指します
+    runs-on: ubuntu-18.04
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Setup ROS Melodic
+    - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip
+        sudo pip3 install --upgrade pip==20.*
+        sudo pip3 install testresources
         sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu bionic main" > /etc/apt/sources.list.d/ros-latest.list'
         sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
         sudo apt-get update
@@ -23,16 +27,17 @@ jobs:
         sudo add-apt-repository universe
         sudo apt-get install -y ros-melodic-desktop-full python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
         sudo rosdep init
-        rosdep update
-        echo "source /opt/ros/melodic/setup.bash" >> $GITHUB_ENV
+        sudo rosdep update
 
-    - name: Install dependencies
+    - name: Setup ROS Environment
+      run: echo "source /opt/ros/melodic/setup.bash" >> $GITHUB_ENV
+
+    - name: Install workspace dependencies
       run: |
         source $GITHUB_ENV
         sudo apt-get install -y python3-vcstool
         vcs import < .rosinstall
         rosdep install --from-paths src --ignore-src -r -y
-        echo "source $GITHUB_WORKSPACE/devel/setup.bash" >> $GITHUB_ENV
 
     - name: Build workspace
       run: |
@@ -44,4 +49,5 @@ jobs:
         source $GITHUB_ENV
         catkin_make run_tests
         catkin_test_results
+
 
