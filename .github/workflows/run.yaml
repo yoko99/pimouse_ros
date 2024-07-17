@@ -1,7 +1,0 @@
-name: learn-github-actions
-on: [push]
-jobs:
-  check-bats-version:
-    runs-on: ubuntu-20.04
-    steps:
-      - run: echo "this is pen"
