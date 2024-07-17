@@ -1,30 +1,53 @@
-name: ROS test workflow2
+name: ROS Melodic CI
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  test:
-    runs-on: ubuntu-20.04
-    env:
-      CATKIN_WS: /home/runner/work/catkin_ws
+  build:
+    runs-on: ubuntu-18.04  # Ubuntu 18.04を使用
+
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-    - name: Setup ROS
-      uses: ros-tooling/setup-ros@v0.2
-      with:
-        required-ros-distributions: melodic
-
-    - name: Init workspace
+    - name: Set up ROS Melodic
       run: |
-        source /opt/ros/melodic/setup.bash
-        mkdir -p ${CATKIN_WS}/src && cd ${CATKIN_WS} && catkin_make
-        ln -s ${GITHUB_WORKSPACE} ${CATKIN_WS}/src/
+        sudo apt-get update
+        sudo apt-get install -y curl gnupg2 lsb-release
+        curl -sSL 'http://repo.ros2.org/repos.key' | sudo apt-key add -
+        sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+        sudo apt-get update
+        sudo apt-get install -y python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+        sudo rosdep init
+        rosdep update
+        sudo apt-get install -y ros-melodic-desktop-full
+        sudo apt-get install -y python-pip
+        sudo -H pip install --upgrade pip
+        sudo -H pip install -U setuptools
+        sudo -H pip install testresources
+
+    - name: Setup ROS Environment
+      run: echo "source /opt/ros/melodic/setup.bash" >> $GITHUB_ENV
+
+    - name: Install workspace dependencies
+      run: |
+        source $GITHUB_ENV
+        sudo apt-get install -y python-vcstool
+        vcs import < .rosinstall
+        rosdep install --from-paths src --ignore-src -r -y
+
+    - name: Build workspace
+      run: |
+        source $GITHUB_ENV
         catkin_make
-        source ~/.bashrc
 
     - name: Run tests
       run: |
-        source ${CATKIN_WS}/devel/setup.bash
-        bash -xve ./test/travis_prepare_dummy_files.bash
-        rostest pimouse_ros test.launch
+        source $GITHUB_ENV
+        catkin_make run_tests
+        catkin_test_results
+
