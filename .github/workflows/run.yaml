@@ -1,0 +1,47 @@
+name: ROS Melodic CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # これが通常はubuntu-20.04を指します
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup ROS Melodic
+      run: |
+        sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu bionic main" > /etc/apt/sources.list.d/ros-latest.list'
+        sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+        sudo apt-get update
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository universe
+        sudo apt-get install -y ros-melodic-desktop-full python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+        sudo rosdep init
+        rosdep update
+        echo "source /opt/ros/melodic/setup.bash" >> $GITHUB_ENV
+
+    - name: Install dependencies
+      run: |
+        source $GITHUB_ENV
+        sudo apt-get install -y python3-vcstool
+        vcs import < .rosinstall
+        rosdep install --from-paths src --ignore-src -r -y
+        echo "source $GITHUB_WORKSPACE/devel/setup.bash" >> $GITHUB_ENV
+
+    - name: Build workspace
+      run: |
+        source $GITHUB_ENV
+        catkin_make
+
+    - name: Run tests
+      run: |
+        source $GITHUB_ENV
+        catkin_make run_tests
+        catkin_test_results
+
