@@ -13,6 +13,8 @@ class BuzzerTest(unittest.TestCase):
 
     def test_put_value(self):
         pub = rospy.Publisher('/buzzer', UInt16, queue_size=10)
+        rospy.sleep(0.5)
+        
         for i in range(10):
             pub.publish(1234)
             time.sleep(0.1)
