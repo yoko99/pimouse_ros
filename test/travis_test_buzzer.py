@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 #encoding: utf8
-import rospy, unittest, rostest, actionlib
+import rospy, unittest, rostest
 import rosnode
 import time
 from std_msgs.msg import UInt16
-from pimouse_ros.msg import MusicAction, MusicResult, MusicFeedback, MusicGoal
 
 class BuzzerTest(unittest.TestCase):
     def test_node_exist(self):
