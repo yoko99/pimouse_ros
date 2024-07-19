@@ -3,6 +3,8 @@
 import sys, rospy, math
 from pimouse_ros.msg import MotorFreqs
 from geometry_msgs.msg import Twist
+from std_srvs.srv import Trigger, TriggerResponse
+from pimouse_ros.srv import TimedMotion 
 
 class Motor():
     def __init__(self):
@@ -10,10 +12,13 @@ class Motor():
 
         rospy.on_shutdown(self.set_power)
         self.sub_raw = rospy.Subscriber('motor_raw', MotorFreqs, self.callback_raw_freq)
+        self.srv_on = rospy.Service('motor_on', Trigger, self.callback_on)
+        self.srv_off = rospy.Service('motor_off', Trigger, self.callback_off)
+        self.srv_tm = rospy.Service('timed_motion', TimedMotion, self.callback_tm)
         self.sub_cmd_vel = rospy.Subscriber('cmd_vel', Twist, self.callback_cmd_vel)
         self.last_time = rospy.Time.now()
         self.using_cmd_vel = False
-        #print 1
+        print 1
 
     def set_power(self, onoff=False):
         en = "/dev/rtmotoren0"
@@ -49,6 +54,31 @@ class Motor():
         self.set_raw_freq(forward_hz-rot_hz, forward_hz+rot_hz)
         self.using_cmd_vel = True
         self.last_time = rospy.Time.now()
+
+    def onoff_response(self, onoff):
+        d = TriggerResponse()
+        d.success = self.set_power(onoff)
+        d.message = "ON" if self.is_on else "OFF"
+        return d
+
+    def callback_on(self, message): return self.onoff_response(True)
+    def callback_off(self, message): return self.onoff_response(False)
+
+    def callback_tm(self, message):
+        if not self.is_on:
+            rospy.logerr("not enpowerd")
+            return False
+
+        dev = "/dev/rtmotor0"
+        try:
+            with open(dev, 'w') as f:
+                f.write("%d %d %d\n" %
+                    (message.left_hz, message.right_hz, message.duration_ms))
+        except:
+            rospy.logerr("cannot write to " + dev)
+            return False
+
+        return True
 
 if __name__ == '__main__':
     rospy.init_node('motors')
