@@ -18,7 +18,7 @@ class Motor():
         self.sub_cmd_vel = rospy.Subscriber('cmd_vel', Twist, self.callback_cmd_vel)
         self.last_time = rospy.Time.now()
         self.using_cmd_vel = False
-        print 1
+        # print 1
 
     def set_power(self, onoff=False):
         en = "/dev/rtmotoren0"
