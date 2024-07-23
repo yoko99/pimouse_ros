@@ -8,7 +8,7 @@ from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger
 
 class MotorTest(unittest.TestCase):
-    def setup(self):
+    def setUp(self):
         rospy.wait_for_service('/motor_on')
         rospy.wait_for_service('/motor_off')
         on = rospy.ServiceProxy('/motor_on', Trigger)
@@ -67,4 +67,4 @@ class MotorTest(unittest.TestCase):
 
 if __name__ == '__main__':
     rospy.init_node('travis_test_motors')
-    rostest.rosrun('pimouse_ros' ,'travid_test_motors' , MotorTest)
+    rostest.rosrun('pimouse_ros' ,'travis_test_motors' , MotorTest)
